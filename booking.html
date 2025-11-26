@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Booking - Jasa Tukang</title></head>
+<body>
+  <h2>Form Pemesanan</h2>
+  <form id="form">
+    <label>Id Pelanggan: <input id="pelanggan_id" required></label><br><br>
+    <label>Id Tukang: <input id="tukang_id" required></label><br><br>
+    <label>Alamat Pekerjaan:<br><textarea id="alamat_pekerjaan" rows="3"></textarea></label><br><br>
+    <label>Keterangan:<br><textarea id="keterangan" rows="3"></textarea></label><br><br>
+    <button>Pesan</button>
+  </form>
+
+  <script>
+  // If opened from index.html with ?tukang=ID, prefill tukang_id
+  const params = new URLSearchParams(location.search);
+  if (params.get('tukang')) document.getElementById('tukang_id').value = params.get('tukang');
+
+  document.getElementById('form').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const payload = {
+      pelanggan_id: document.getElementById('pelanggan_id').value,
+      tukang_id: document.getElementById('tukang_id').value,
+      alamat_pekerjaan: document.getElementById('alamat_pekerjaan').value,
+      keterangan: document.getElementById('keterangan').value
+    };
+    try {
+      const res = await fetch('http://localhost:3000/api/permintaan', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.ok) alert('Permintaan terkirim');
+      else alert(data.error || 'Gagal mengirim');
+    } catch(e) { alert('Gagal koneksi ke server'); }
+  });
+  </script>
+</body>
+</html>

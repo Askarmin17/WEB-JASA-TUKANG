@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Register - Jasa Tukang</title></head>
+<body>
+  <h2>Daftar Pelanggan</h2>
+  <form id="form">
+    <label>Nama: <input id="nama" required></label><br><br>
+    <label>Email: <input type="email" id="email" required></label><br><br>
+    <label>Password: <input type="password" id="password" required></label><br><br>
+    <label>Alamat: <input id="alamat"></label><br><br>
+    <label>No. Telepon: <input id="no"></label><br><br>
+    <button>Daftar</button>
+  </form>
+
+  <script>
+  document.getElementById('form').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const payload = {
+      nama: document.getElementById('nama').value,
+      email: document.getElementById('email').value,
+      password: document.getElementById('password').value,
+      alamat: document.getElementById('alamat').value,
+      no_telefon: document.getElementById('no').value
+    };
+    try {
+      const res = await fetch('http://localhost:3000/api/register', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.ok) { alert('Berhasil daftar. Silakan login.'); window.location='login.html'; }
+      else alert(data.error || 'Gagal mendaftar');
+    } catch(e) { alert('Gagal koneksi ke server'); }
+  });
+  </script>
+</body>
+</html>

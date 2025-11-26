@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Login - Jasa Tukang</title></head>
+<body>
+  <h2>Login Pelanggan</h2>
+  <form id="form">
+    <label>Email: <input type="email" id="email" required></label><br><br>
+    <label>Password: <input type="password" id="password" required></label><br><br>
+    <button>Login</button>
+  </form>
+  <p>Belum punya akun? <a href="register.html">Daftar</a></p>
+
+  <script>
+  document.getElementById('form').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+      const res = await fetch('http://localhost:3000/api/login', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        alert('Login sukses');
+        window.location = 'index.html';
+      } else {
+        alert(data.error || 'Login gagal');
+      }
+    } catch(e) { alert('Gagal koneksi ke server'); }
+  });
+  </script>
+</body>
+</html>
